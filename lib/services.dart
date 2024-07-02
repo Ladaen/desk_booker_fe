@@ -7,8 +7,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart' as p;
 
 class ServicesInfo {
-  static final String baseUrl =
-      dotenv.env['SERVICE_URI'] as String; // Your API base URL
+  
+  static final String baseUrl = "http://localhost:3001"; // Your API base URL
+      // dotenv.env['SERVICE_URI'] as String; // Your API base URL
 }
 
 class LoginService {
@@ -112,7 +113,9 @@ class FloorService {
       }
 
       return floor;
-    } else {
+    } else if (response.statusCode == 404){
+      throw HttpException('Floor not found');
+    }else {
       throw Exception('Failed to fetch floor');
     }
   }
