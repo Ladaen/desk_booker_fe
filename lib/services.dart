@@ -1,16 +1,19 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:frondend_project_uas/data_models.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:path/path.dart' as p;
 
-class ServicesInfo{
-  static final String baseUrl = dotenv.env['SERVICE_URI'] as String; // Your API base URL
+class ServicesInfo {
+  static final String baseUrl =
+      dotenv.env['SERVICE_URI'] as String; // Your API base URL
 }
 
 class LoginService {
   String baseUrl = ServicesInfo.baseUrl;
-  
+
   Future<User> loginUser(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
@@ -57,6 +60,18 @@ class BookingService {
   // Implement update and delete methods similarly
 }
 
+Future<void> saveImageToFile(Uint8List imageBytes, String fileName) async {
+  final directory =
+      Directory('floor_layouts'); // Path to the "floor_layouts" folder
+  if (!directory.existsSync()) {
+    directory.createSync();
+  }
+
+  final file = File('${directory.path}/$fileName');
+  await file.writeAsBytes(imageBytes);
+  print('Image saved to ${file.path}');
+}
+
 class FloorService {
   String baseUrl = ServicesInfo.baseUrl;
 
@@ -78,7 +93,25 @@ class FloorService {
     final response = await http.get(Uri.parse('$baseUrl/floors/$floorId'));
 
     if (response.statusCode == 200) {
-      return Floor.fromJson(jsonDecode(response.body));
+      final dynamic json = jsonDecode(response.body);
+      final floor = Floor.fromJson(json);
+
+      final directory = Directory('floor_layouts');
+      final fileName = p.basename(floor.floorPlanPath);
+      final fullFileName = File('${directory.path}/${fileName}');
+      DateTime floorPlanLastModified = await fullFileName.lastModified();
+
+      if (floor.floorPlanLastModified != floorPlanLastModified) {
+        // Fetch floor plan image
+        final imageResponse =
+            await http.get(Uri.parse('$baseUrl/floors/$floorId/image'));
+        if (imageResponse.statusCode == 200) {
+          final imageBytes = imageResponse.bodyBytes;
+          saveImageToFile(imageBytes, fileName);
+        }
+      }
+
+      return floor;
     } else {
       throw Exception('Failed to fetch floor');
     }
@@ -104,6 +137,27 @@ class FloorService {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to update floor');
+    }
+  }
+
+  Future<void> uploadFloorLayout(File imageFile) async {
+    final url = Uri.parse(
+        '$baseUrl/upload-floor-layout'); // Replace with your actual API endpoint
+
+    final request = http.MultipartRequest('POST', url);
+    request.files
+        .add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+    try {
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        print('Floor layout uploaded successfully!');
+      } else {
+        print(
+            'Failed to upload floor layout. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error uploading floor layout: $e');
     }
   }
 
