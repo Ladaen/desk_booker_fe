@@ -3,6 +3,25 @@ import 'floor_mapping.dart';
 import 'desk_mapping.dart';
 import 'department_setup.dart';
 
+class AdminTask extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  AdminTask({required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: ListTile(
+        title: Text(title, style: TextStyle(fontSize: 18.0)),
+        trailing: Icon(Icons.arrow_forward),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
 class DashboardAdmin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -166,11 +185,35 @@ class DashboardAdmin extends StatelessWidget {
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.grey[300],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.date_range, color: Colors.grey),
+                            SizedBox(width: 10),
+                            Text(
+                              'Tanggal: 4 Juli 2024',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sed lectus mattis posuere. Nulla facilisi.',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
             SizedBox(height: 20),
-            // Tambahkan bagian Carousel atau konten lainnya di sini
             Text(
               'Admin Tasks',
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
