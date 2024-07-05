@@ -282,3 +282,29 @@ void main() {
     home: DashboardAdmin(),
   ));
 }
+class AdminTask extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+
+  AdminTask({required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 18.0),
+          ),
+          ElevatedButton(
+            onPressed: onTap,
+            child: Text('Choose'),
+          ),
+        ],
+      ),
+    );
+  }
+}
