@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'floor_mapping.dart';
+import 'desk_mapping.dart';
+import 'department_setup.dart';
 
 class DashboardAdmin extends StatelessWidget {
   @override
@@ -36,13 +38,19 @@ class DashboardAdmin extends StatelessWidget {
             AdminTask(
               title: 'Desk Mapping',
               onTap: () {
-                // Tambahkan aksi untuk tombol choose
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeskMapping()),
+                );
               },
             ),
             AdminTask(
               title: 'Department Setup',
               onTap: () {
-                // Tambahkan aksi untuk tombol choose
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DepartmentSetup()),
+                );
               },
             ),
           ],
