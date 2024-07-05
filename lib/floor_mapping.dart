@@ -13,44 +13,85 @@ class FloorMapping extends StatelessWidget {
         ),
         title: Text("Floor Mapping"),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Floor Mapping',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                'Floor Mapping',
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.5,
-              maxWidth: double.infinity,
+            SizedBox(height: 16.0),
+            Center(
+              child: Image.asset(
+                'assets/images/Kursi2.png', // Ganti dengan path gambar Anda
+                width: 1000, // Atur lebar gambar sesuai kebutuhan
+                height: 200, // Atur tinggi gambar sesuai kebutuhan
+              ),
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Image.asset(
-              'assets/images/Kursi.png', // Ganti dengan gambar floor mapping Anda
-              fit: BoxFit.cover,
+            SizedBox(height: 16.0),
+            Text(
+              'Lantai',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
+            Wrap(
+              spacing: 8.0,
+              children: List.generate(6, (index) {
+                return ElevatedButton(
+                  onPressed: () {
+                    // Tambahkan aksi untuk setiap tombol lantai
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text('Lantai ${index + 1}'),
+                );
+              }),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Departement',
+              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+            ),
+            Wrap(
+              spacing: 8.0,
+              children: [
+                _buildCheckbox('Design Grafis'),
+                _buildCheckbox('Marketing'),
+                _buildCheckbox('Programer'),
+                _buildCheckbox('Data Entry'),
+                _buildCheckbox('Accounting'),
+                _buildCheckbox('All'),
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Tambahkan aksi untuk tombol submit
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                child: Text('SUBMIT'),
+              ),
+            ),
+          ],
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.date_range, color: Colors.blue),
-            label: 'Date',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.blue),
-            label: 'Profile',
-          ),
-        ],
-      ),
+    );
+  }
+
+  Widget _buildCheckbox(String title) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Checkbox(value: false, onChanged: (bool? value) {}),
+        Text(title),
+      ],
     );
   }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'floor_mapping.dart';
+import 'desk_mapping.dart';
+import 'department_setup.dart';
 
 class DashboardAdmin extends StatelessWidget {
   @override
@@ -168,13 +171,46 @@ class DashboardAdmin extends StatelessWidget {
             ),
             SizedBox(height: 20),
             // Tambahkan bagian Carousel atau konten lainnya di sini
+            Text(
+              'Admin Tasks',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16.0),
+            AdminTask(
+              title: 'Floor Mapping',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FloorMapping()),
+                );
+              },
+            ),
+            AdminTask(
+              title: 'Desk Mapping',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DeskMapping()),
+                );
+              },
+            ),
+            AdminTask(
+              title: 'Department Setup',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DepartmentSetup()),
+                );
+              },
+            ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar (
+      bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.blue, // Warna latar belakang biru
         selectedItemColor: Colors.blue, // Warna ikon dipilih putih
-        unselectedItemColor: const Color.fromARGB(255, 0, 0, 0).withOpacity(0.6), // Warna ikon tidak dipilih dengan opacity
+        unselectedItemColor: const Color.fromARGB(255, 0, 0, 0)
+            .withOpacity(0.6), // Warna ikon tidak dipilih dengan opacity
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
