@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
-import 'dashboard_admin.dart';
-import 'floor_mapping.dart';
+import 'dashboard_admin.dart'; // Pastikan import sesuai dengan struktur proyek Anda
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: const LoginPage(),
     );
   }
 }
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +44,7 @@ class LoginPage extends StatelessWidget {
     return Column(
       children: [
         Container(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxHeight: 200.0,
             maxWidth: double.infinity,
           ),
@@ -59,7 +58,7 @@ class LoginPage extends StatelessWidget {
           "Book Desker",
           style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
         ),
-        const Text("Enter your credential to login"),
+        const Text("Masukkan kredensial Anda untuk masuk"),
       ],
     );
   }
@@ -70,30 +69,35 @@ class LoginPage extends StatelessWidget {
       children: [
         TextField(
           decoration: InputDecoration(
-              hintText: "Username",
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Colors.purple.withOpacity(0.1),
-              filled: true,
-              prefixIcon: const Icon(Icons.person)),
+            hintText: "Username",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
+            fillColor: Colors.blue.withOpacity(0.1),
+            filled: true,
+            prefixIcon: const Icon(Icons.person),
+          ),
         ),
         const SizedBox(height: 10),
         TextField(
           decoration: InputDecoration(
             hintText: "Password",
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
+              borderRadius: BorderRadius.circular(18),
+              borderSide: BorderSide.none,
+            ),
             fillColor: Colors.purple.withOpacity(0.1),
             filled: true,
-            prefixIcon: const Icon(Icons.password),
+            prefixIcon: const Icon(Icons.lock),
           ),
           obscureText: true,
         ),
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () {
+            // Tambahkan logika autentikasi di sini sebelum navigasi
+            // Contoh sederhana: hanya navigasi tanpa autentikasi
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => DashboardAdmin()),
@@ -102,7 +106,7 @@ class LoginPage extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.purple,
+            backgroundColor: const Color(0xFF71D4FE), // Warna disesuaikan
           ),
           child: const Text(
             "Login",
@@ -115,9 +119,11 @@ class LoginPage extends StatelessWidget {
 
   Widget _forgotPassword(BuildContext context) {
     return TextButton(
-      onPressed: () {},
+      onPressed: () {
+        // Tambahkan fungsi untuk lupa kata sandi di sini
+      },
       child: const Text(
-        "Forgot password?",
+        "Lupa kata sandi?",
         style: TextStyle(color: Colors.purple),
       ),
     );
@@ -127,11 +133,13 @@ class LoginPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Don't have an account? "),
+        const Text("Belum punya akun? "),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            // Tambahkan fungsi untuk navigasi ke halaman pendaftaran di sini
+          },
           child: const Text(
-            "Sign Up",
+            "Daftar",
             style: TextStyle(color: Colors.purple),
           ),
         )
