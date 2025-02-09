@@ -6,6 +6,7 @@ class DashboardAdmin extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      resizeToAvoidBottomInset : false,
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
         automaticallyImplyLeading: false,
