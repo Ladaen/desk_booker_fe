@@ -59,11 +59,29 @@ class _LoginPageState extends State<LoginPage> {
             fit: BoxFit.cover,
           ),
         ),
-        const Text(
-          "Book Desker",
-          style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Book',
+              style: TextStyle(
+                  fontSize: 50,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Quicksand"),
+            ),
+            Text(
+              'Desker',
+              style: TextStyle(
+                  fontSize: 50,
+                  color: Colors.yellow,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "Quicksand"),
+            ),
+          ],
         ),
         const Text("Masukkan kredensial Anda untuk masuk"),
+        SizedBox(height: 10,)
       ],
     );
   }
@@ -147,32 +165,24 @@ class _LoginPageState extends State<LoginPage> {
       final box = GetStorage();
 
       UserModel loginResult;
-      // if (kDebugMode)
-      //   loginResult = new UserModel(
-      //       name: "Gambut",
-      //       email: "daeng.nurdin@students.paramadina.ac.id",
-      //       role: "User",
-      //       password: "",
-      //       department: "IT");
-      // else
-        try {
-          loginResult =
-              await LoginService().loginUser(_enteredEmail, _enteredPassword);
-        } catch (e) {
-          _showMyDialog(e.toString());
-          setState(() {
-            _isSending = false;
-          });
+      try {
+        loginResult =
+            await LoginService().loginUser(_enteredEmail, _enteredPassword);
+      } catch (e) {
+        _showMyDialog(e.toString());
+        setState(() {
+          _isSending = false;
+        });
 
-          return;
-        }
+        return;
+      }
 
       box.write("currentUser", loginResult.toJson());
 
       if (!context.mounted) {
         return;
       }
-      
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => DefaultLayout(loginResult)),

@@ -38,7 +38,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   @override
   Widget build(BuildContext context) {
     if (user == null) return LoginPage();
-
+    userRole = user?.role ?? "User";
     screens.addAll([
       Dashboard(),
       DeskBooking(),

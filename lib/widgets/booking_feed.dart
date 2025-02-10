@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frondend_project_uas/helpers/date_helper.dart';
 import 'package:frondend_project_uas/models/booking_model.dart';
-import 'package:intl/intl.dart';
 
-import '../models/news_model.dart';
+import '../services.dart';
 
 class BookingFeed extends StatelessWidget {
   List<BookingModel> bookings;
@@ -12,7 +11,7 @@ class BookingFeed extends StatelessWidget {
   BookingFeed(this.bookings);
 
   static List<Widget> GetBookingFeedBox(
-      BookingModel bookingModel, double screenWidth) {
+      BuildContext context, BookingModel bookingModel, double screenWidth) {
     var result = [
       Container(
         decoration: BoxDecoration(
@@ -50,6 +49,17 @@ class BookingFeed extends StatelessWidget {
                     bookingModel.bookingDate.toFormattedString(),
                     style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
+                  ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () => cancelBookingConfirmation(
+                          context,
+                          bookingModel.bookingDate.toFormattedString(),
+                          bookingModel.id.toString()),
+                      child: Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white),
+                      ))
                 ],
               ),
             )
@@ -79,8 +89,49 @@ class BookingFeed extends StatelessWidget {
               ),
               SizedBox(height: 10)
             ] +
-            GetBookingFeedBox(bookings.first, screenWidth),
+            GetBookingFeedBox(context, bookings.first, screenWidth),
       ),
+    );
+  }
+
+  static cancelBookingConfirmation(
+      BuildContext context, String bookingDate, String BookingId) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes, cancel it"),
+      onPressed: () async {
+        BookingService.cancelActiveBooking(BookingId)
+            .then((value) => {Navigator.of(context).pop()})
+            .onError((error, stackTrace) => {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(error.toString()),
+                  ))
+                });
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Are You Sure?"),
+      content: Text("You like to cancel the booking for " + bookingDate),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

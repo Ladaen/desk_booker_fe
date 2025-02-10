@@ -84,10 +84,22 @@ class BookingService {
 
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-            final List<dynamic> jsonList = jsonDecode(response.body);
+      final List<dynamic> jsonList = jsonDecode(response.body);
       return jsonList.map((json) => BookingModel.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch bookings');
+    }
+  }
+
+  static Future<String> cancelActiveBooking(String bookingId) async {
+    final uri = Uri.http(baseUrl.replaceAll("http://", ""),
+        '/bookings/' + bookingId);
+
+    final response = await http.put(uri);
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(response.body);
     }
   }
 

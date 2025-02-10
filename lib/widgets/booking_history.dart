@@ -32,6 +32,10 @@ class BookingHistory extends StatelessWidget {
         }
 
         var bookingModel = snapshot.data as List<BookingModel>;
+        
+        if (bookingModel.length == 0) {
+          return const Center(child: Text('No booking history yet.'));
+        }
 
         var firstBooking = bookingModel.first;
     
