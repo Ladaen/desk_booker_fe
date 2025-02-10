@@ -1,7 +1,7 @@
 name: frondend_project_uas
 description: A new Flutter project.
 
-publish_to: 'none' # Remove this line if you want to publish to pub.dev
+publish_to: "none" # Remove this line if you want to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -15,6 +15,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.2.1
   flutter_dotenv: ^5.1.0
+  intl: ^0.20.2
+  get_storage: ^2.1.1
+  file_picker: ^8.0.5
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +32,16 @@ flutter:
     - assets/images/
     - .env
     - assets/images/Kursi2.png
+
+  fonts:
+    - family: Quicksand
+      fonts:
+        - asset: assets/fonts/Quicksand-Regular.ttf
+        - asset: assets/fonts/Quicksand-Light.ttf
+          weight: 100
+        - asset: assets/fonts/Quicksand-Medium.ttf
+          weight: 300
+        - asset: assets/fonts/Quicksand-SemiBold.ttf
+          weight: 700
+        - asset: assets/fonts/Quicksand-Bold.ttf
+          weight: 900

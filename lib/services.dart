@@ -1,21 +1,24 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:frondend_project_uas/data_models.dart';
+import 'package:frondend_project_uas/models/floor_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart' as p;
 
+import 'models/booking_model.dart';
+import 'models/seat_model.dart';
+import 'models/user_model.dart';
+
 class ServicesInfo {
-  
-  static final String baseUrl = "http://localhost:3001"; // Your API base URL
-      // dotenv.env['SERVICE_URI'] as String; // Your API base URL
+  static final String baseUrl =
+      dotenv.env['SERVICE_URI'] as String; // Your API base URL
 }
 
 class LoginService {
   String baseUrl = ServicesInfo.baseUrl;
 
-  Future<User> loginUser(String email, String password) async {
+  Future<UserModel> loginUser(String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
@@ -23,7 +26,7 @@ class LoginService {
     );
 
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      return UserModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Login failed. Invalid credentials.');
     }
@@ -31,9 +34,9 @@ class LoginService {
 }
 
 class BookingService {
-  String baseUrl = ServicesInfo.baseUrl;
+  static String baseUrl = ServicesInfo.baseUrl;
 
-  Future<Booking> createBooking(Booking booking) async {
+  Future<BookingModel> createBooking(BookingModel booking) async {
     final response = await http.post(
       Uri.parse('$baseUrl/bookings'),
       headers: {'Content-Type': 'application/json'},
@@ -41,18 +44,48 @@ class BookingService {
     );
 
     if (response.statusCode == 201) {
-      return Booking.fromJson(jsonDecode(response.body));
+      return BookingModel.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to create booking');
+      throw Exception('Failed to create booking, ' + response.body);
     }
   }
 
-  Future<List<Booking>> getAllBookings() async {
-    final response = await http.get(Uri.parse('$baseUrl/bookings'));
+  static Future<List<BookingModel>> getAllBookings() async {
+    final response = await http.get(Uri.parse('$baseUrl/booked-seats'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => Booking.fromJson(json)).toList();
+      return jsonList.map((json) => BookingModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch bookings');
+    }
+  }
+
+  static Future<List<BookingModel>> getBookingHistory(String email) async {
+    final queryParameters = {'email': email};
+
+    final uri = Uri.http(
+        baseUrl.replaceAll("http://", ""), '/booking-history', queryParameters);
+
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => BookingModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch bookings');
+    }
+  }
+
+  static Future<List<BookingModel>> getActiveBooking(String email) async {
+    final queryParameters = {'email': email};
+
+    final uri = Uri.http(baseUrl.replaceAll("http://", ""),
+        '/last-booking-history', queryParameters);
+
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+            final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => BookingModel.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch bookings');
     }
@@ -76,7 +109,7 @@ Future<void> saveImageToFile(Uint8List imageBytes, String fileName) async {
 class FloorService {
   String baseUrl = ServicesInfo.baseUrl;
 
-  Future<Floor> createFloor(Floor floor) async {
+  Future<FloorModel> createFloor(FloorModel floor) async {
     final response = await http.post(
       Uri.parse('$baseUrl/floors'),
       headers: {'Content-Type': 'application/json'},
@@ -84,18 +117,18 @@ class FloorService {
     );
 
     if (response.statusCode == 201) {
-      return Floor.fromJson(jsonDecode(response.body));
+      return FloorModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create floor');
     }
   }
 
-  Future<Floor> getFloorById(int floorId) async {
+  Future<FloorModel> getFloorById(int floorId) async {
     final response = await http.get(Uri.parse('$baseUrl/floors/$floorId'));
 
     if (response.statusCode == 200) {
       final dynamic json = jsonDecode(response.body);
-      final floor = Floor.fromJson(json);
+      final floor = FloorModel.fromJson(json);
 
       final directory = Directory('floor_layouts');
       final fileName = p.basename(floor.floorPlanPath);
@@ -113,25 +146,25 @@ class FloorService {
       }
 
       return floor;
-    } else if (response.statusCode == 404){
+    } else if (response.statusCode == 404) {
       throw HttpException('Floor not found');
-    }else {
+    } else {
       throw Exception('Failed to fetch floor');
     }
   }
 
-  Future<List<Floor>> getAllFloors() async {
+  Future<List<FloorModel>> getAllFloors() async {
     final response = await http.get(Uri.parse('$baseUrl/floors'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => Floor.fromJson(json)).toList();
+      return jsonList.map((json) => FloorModel.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch floors');
     }
   }
 
-  Future<void> updateFloor(Floor floor) async {
+  Future<void> updateFloor(FloorModel floor) async {
     final response = await http.put(
       Uri.parse('$baseUrl/floors/${floor.id}'),
       headers: {'Content-Type': 'application/json'},
@@ -176,7 +209,7 @@ class FloorService {
 class SeatService {
   String baseUrl = ServicesInfo.baseUrl;
 
-  Future<Seat> createSeat(Seat seat) async {
+  Future<SeatModel> createSeat(SeatModel seat) async {
     final response = await http.post(
       Uri.parse('$baseUrl/seats'),
       headers: {'Content-Type': 'application/json'},
@@ -184,34 +217,54 @@ class SeatService {
     );
 
     if (response.statusCode == 201) {
-      return Seat.fromJson(jsonDecode(response.body));
+      return SeatModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create seat');
     }
   }
 
-  Future<Seat> getSeatById(int seatId) async {
+  Future<SeatModel> getSeatById(int seatId) async {
     final response = await http.get(Uri.parse('$baseUrl/seats/$seatId'));
 
     if (response.statusCode == 200) {
-      return Seat.fromJson(jsonDecode(response.body));
+      return SeatModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to fetch seat');
     }
   }
 
-  Future<List<Seat>> getAllSeats() async {
-    final response = await http.get(Uri.parse('$baseUrl/seats'));
+  Future<List<SeatModel>> getAllSeats(
+      DateTime bookingDate, int floor, String department) async {
+    final queryParameters = {
+      'bookingDate': bookingDate.toIso8601String(),
+      'department': department,
+      'floor': floor.toString()
+    };
 
+    final uri = Uri.http(
+        baseUrl.replaceAll("http://", ""), '/combined-seats', queryParameters);
+
+    final response = await http.get(uri);
     if (response.statusCode == 200) {
-      final List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => Seat.fromJson(json)).toList();
+      final result = jsonDecode(response.body);
+      final List<SeatModel> availableSeats =
+          (result["availableSeats"] as List<dynamic>)
+              .map((json) => SeatModel.fromJson(json))
+              .toList();
+      final List<SeatModel> bookedSeats =
+          (result["bookedSeats"] as List<dynamic>)
+              .map((json) => SeatModel.fromJson(json))
+              .toList();
+      bookedSeats.forEach((element) {
+        element.isActive = false;
+      });
+      return availableSeats + bookedSeats;
     } else {
       throw Exception('Failed to fetch seats');
     }
   }
 
-  Future<void> updateSeat(Seat seat) async {
+  Future<void> updateSeat(SeatModel seat) async {
     final response = await http.put(
       Uri.parse('$baseUrl/seats/${seat.seatCode}'),
       headers: {'Content-Type': 'application/json'},

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class DeskMapping extends StatelessWidget {
+class DepartmentSetup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,14 +12,14 @@ class DeskMapping extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Text("Desk Mapping"),
+        title: Text("Departement Karyawan"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Text(
-              'Desk Mapping',
+              'Departement Karyawan',
               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16.0),
@@ -41,14 +41,14 @@ class DeskMapping extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Nomor Meja',
+                      child: Text('Nama',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Lantai',
+                      child: Text('ID Card',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white)),
@@ -62,9 +62,11 @@ class DeskMapping extends StatelessWidget {
                     ),
                   ],
                 ),
-                _buildTableRow('10.1', '5', 'Finance', context),
-                _buildTableRow('10.2', '5', 'Marketing', context),
-                _buildTableRow('10.3', '5', 'All', context),
+                _buildTableRow('Daeng Ahmad', '123456789', 'Finance', context),
+                _buildTableRow(
+                    'Dodik Firmansah', '543654321', 'Marketing', context),
+                _buildTableRow(
+                    'Akrom Hakiki', '675653323', 'Accounting', context),
               ],
             ),
             Spacer(),
@@ -81,47 +83,31 @@ class DeskMapping extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.blue),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.date_range, color: Colors.blue),
-            label: 'Date',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.blue),
-            label: 'Profile',
-          ),
-        ],
-      ),
     );
   }
 
-  TableRow _buildTableRow(String nomorMeja, String lantai, String departement,
-      BuildContext context) {
+  TableRow _buildTableRow(
+      String name, String idCard, String department, BuildContext context) {
     return TableRow(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(nomorMeja),
+          child: Text(name),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(lantai),
+          child: Text(idCard),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(departement),
+              Text(department),
               Spacer(),
               IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  _showEditDialog(context, nomorMeja, lantai, departement);
+                  _showEditDialog(context, name, idCard, department);
                 },
               ),
             ],
@@ -131,75 +117,82 @@ class DeskMapping extends StatelessWidget {
     );
   }
 
-  void _showEditDialog(BuildContext context, String nomorMeja, String lantai,
-      String departement) {
+  void _showEditDialog(
+      BuildContext context, String name, String idCard, String department) {
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'EDIT DATA',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          backgroundColor: Colors.transparent,
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'EDIT DATA',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text('Nama'),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: name,
                     ),
-                    IconButton(
-                      icon: Icon(Icons.close),
+                  ),
+                  SizedBox(height: 16),
+                  Text('ID Card'),
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: idCard,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text('Departement'),
+                  Wrap(
+                    children: [
+                      _buildCheckbox('Design Grafis'),
+                      _buildCheckbox('Marketing'),
+                      _buildCheckbox('Programer'),
+                      _buildCheckbox('Data Entry'),
+                      _buildCheckbox('Accounting'),
+                      _buildCheckbox('All'),
+                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Center(
+                    child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.pop(context);
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: Text('SUBMIT'),
                     ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text('Lantai'),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: lantai,
                   ),
-                ),
-                SizedBox(height: 16),
-                Text('Nomor Meja'),
-                TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: nomorMeja,
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text('Departement'),
-                Wrap(
-                  children: [
-                    _buildCheckbox('Design Grafis'),
-                    _buildCheckbox('Marketing'),
-                    _buildCheckbox('Programer'),
-                    _buildCheckbox('Data Entry'),
-                    _buildCheckbox('Accounting'),
-                    _buildCheckbox('All'),
-                  ],
-                ),
-                SizedBox(height: 16),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                    child: Text('SUBMIT'),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
